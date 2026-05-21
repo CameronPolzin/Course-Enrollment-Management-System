@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+
+
+    <h2>Your Notifications</h2>
+<div style="max-width: 1000px; margin: 30px auto;">
+    <a href="{% url 'home' %}">&larr; Back to Home</a>
+    <form method="post" action="{% url 'notifications' %}">
+        {% csrf_token %}
+        <button type="submit" name="mark_read" style="margin-bottom: 10px;">Mark All as Read</button>
+    </form>
+
+
+
+    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+        {% if notifications %}
+        <ul class="notif-list">
+            {% for notification in notifications %}
+            <li class="notif-item {% if not notification.is_read %}notif-unread{% else %}notif-read{% endif %}">
+                <small>{{ notification.created_at|date:"M d, Y H:i" }}</small><br>
+                {{ notification.message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>You have no notifications.</p>
+        {% endif %}
+    </div>
+    <br>
+
+{% endblock %}
+</div>

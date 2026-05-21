@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Send Notification{% endblock %}
+
+{% block content %}
+<h1>Send Notification to Class</h1>
+<div style="max-width: 800px; margin: 30px auto;">
+<p>
+    <a href="{% url 'home' %}">&larr; Back to Home</a>
+</p>
+    <form method="post" action="{% url 'send_notification' %}" onsubmit="return confirm('Are you want to notify all students in this class?')">{% csrf_token %}<div style="margin-bottom: 10px;">
+        <label for="course_id">Select Class:</label><br>
+        <select name="course_id" id="course_id" required style="width: 100%; padding: 5px;">
+            <option value="" disabled selected>-- Select a Class --</option>
+            {% for course in courses %}<option value="{{ course.id }}">{{ course.course_code }} - {{ course.name }}</option>
+            {% endfor %}
+        </select>
+    </div><div style="margin-bottom: 10px;">
+        <label for="message">Message:</label><br>
+        <textarea name="message" id="message" required style="width: 100%; height: 80px; padding: 5px;" placeholder="Enter your message here..."></textarea>
+    </div><button type="submit">Send Notification</button></form>
+
+
+<br>
+{% endblock %}
+</div>
