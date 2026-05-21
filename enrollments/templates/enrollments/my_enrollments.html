@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}My Enrollments{% endblock %}
+
+{% block content %}
+<h1>My Enrolled Courses</h1>
+<div style="max-width: 1000px; margin: 30px auto;">
+<p>
+    <a href="{% url 'home' %}">&larr; Back to Home</a>
+</p>
+
+{% if messages %}
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}
+{% endif %}
+
+    {% if enrollments %}
+        <table border="1" cellpadding="8" style="margin-top: 1em; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>Instructor</th>
+                    <th>Enrolled At</th>
+                    <th>Drop</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enrollment in enrollments %}
+                <tr>
+                    <td>{{ enrollment.course.course_code }}</td>
+                    <td>{{ enrollment.course.name }}</td>
+                    <td>{{ enrollment.course.instructor }}</td>
+                    <td>{{ enrollment.enrolled_at }}</td>
+                    <td>
+                        <a href="{% url 'enrollments:drop_course' enrollment.course.id %}">
+                            <button type="button">Drop</button>
+                        </a>
+                    </td>
+                </tr>
+
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>You are not enrolled in any courses yet.</p>
+{% endif %}
+{% endblock %}
+</div>

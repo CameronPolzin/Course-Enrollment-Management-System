@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Enrollment Reports{% endblock %}
+
+{% block content %}
+<h1>Enrollment Reports</h1>
+
+<div style="max-width: 1000px; margin: 30px auto;">
+<p><a href="{% url 'home' %}">&larr; Back to Home</a></p>
+
+<h2>
+    Total Enrollments: {{ total_enrollments }}
+</h2>
+
+{% if report_data %}
+
+<table border="1" cellpadding="8">
+
+    <thead>
+        <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Instructor</th>
+            <th>Enrollment</th>
+            <th>Capacity</th>
+            <th>Remaining Seats</th>
+            <th>Seat Usage</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for item in report_data %}
+        <tr>
+
+            <td>
+                {{ item.course.course_code }}
+            </td>
+
+            <td>
+                {{ item.course.name }}
+            </td>
+
+            <td>
+                {% if item.course.instructor %}
+                {{ item.course.instructor.get_full_name|default:item.course.instructor.username }}
+                {% else %}
+                TBA
+                {% endif %}
+            </td>
+
+            <td>
+                {{ item.enrolled }}
+            </td>
+
+            <td>
+                {{ item.course.seating_limit }}
+            </td>
+
+            <td>
+                {{ item.remaining }}
+            </td>
+
+            <td>
+                {{ item.usage_percent }}%
+            </td>
+
+        </tr>
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% else %}
+
+<p>No report data available.</p>
+
+{% endif %}
+
+{% endblock %}
+</div>

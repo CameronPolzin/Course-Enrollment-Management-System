@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Enrollment History{% endblock %}
+
+{% block content %}
+<h1>Enrollment History</h1>
+<div style="max-width: 1000px; margin: 30px auto;">
+<p>
+    <a href="{% url 'course_list' %}">&larr; Back to Course List</a>
+</p>
+
+{% if messages %}
+{% for message in messages %}
+<p>{{  message  }}</p>
+{% endfor %}
+{% endif %}
+
+{% if enrollments %}
+<table border='1' cellpadding="8" style="margin-top : 1em; border-collapse : collapse;">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Instructor</th>
+            <th>Enrolled At</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for enrollment in enrollments %}
+        <tr>
+            <td>{{ enrollment.student.username }}</td>
+            <td>{{ enrollment.course.course_code }}</td>
+            <td>{{ enrollment.course.name }}</td>
+            <td>{{ enrollment.course.instructor }}</td>
+            <td>{{ enrollment.enrolled_at }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No enrollment records found.</p>
+{% endif %}
+{% endblock %}
+</div>

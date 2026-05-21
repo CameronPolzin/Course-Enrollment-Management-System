@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Waitlist Status{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px;
+            margin: 30px auto;"
+    >
+    <h1>My Waitlist Status</h1>
+
+    <p>
+        <a href="{% url 'home' %}">&larr; Back to Home</a>
+    </p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if waitlist_statuses %}
+        <table border="1" cellpadding="8" style="margin-top: 1em; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>Waitlist Position</th>
+                    <th>Joined At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in waitlist_statuses %}
+                <tr>
+                    <td>{{ item.course.course_code }}</td>
+                    <td>{{ item.course.name }}</td>
+                    <td>{{ item.position }}</td>
+                    <td>{{ item.joined_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You are not currently on any waitlists.</p>
+    {% endif %}
+    {% endblock %}
+</div>

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Enrollment{% endblock %}
+
+{% block content %}
+<h1>Manage Enrollment</h1>
+<div style="max-width: 1000px; margin: 30px auto;">
+
+<p>
+    <a href="{% url 'course_list' %}">&larr; Back to Course List</a>
+</p>
+<h2>{{ course.course_code }} - {{ course.name }}</h2>
+
+{% if messages %}
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}
+{% endif %}
+
+<h3>Add Student</h3>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add">
+
+    <label for="student_id">Student:</label>
+    <select name="student_id" id="student_id">
+        {% for student in students %}
+        <option value="{{ student.id }}">
+            {{ student.get_full_name|default:student.username }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add Student</button>
+</form>
+
+<h3>Currently Enrolled Students</h3>
+
+{% if enrollments %}
+<table border="1" cellpadding="8" style="margin-top: 1em; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Enrolled At</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for enrollment in enrollments %}
+        <tr>
+            <td>{{ enrollment.student.get_full_name|default:enrollment.student.username }}</td>
+            <td>{{ enrollment.course.course_code }}</td>
+            <td>{{ enrollment.enrolled_at }}</td>
+            <td>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="remove">
+                    <input type="hidden" name="student_id" value="{{ enrollment.student.id }}">
+                    <button type="submit">Remove</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No students enrolled in this course.</p>
+{% endif %}
+
+<h3>Pending Enrollment Requests</h3>
+
+{% if requests %}
+<table border="1" cellpadding="8" style="margin-top: 1em; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Issue</th>
+            <th>Reason</th>
+            <th>Requested At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for req in requests %}
+        <tr>
+            <td>{{ req.student.get_full_name|default:req.student.username }}</td>
+            <td>{{ req.get_issue_display }}</td>
+            <td>{{ req.reason }}</td>
+            <td>{{ req.created_at }}</td>
+            <td>
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="approve_request">
+                    <input type="hidden" name="request_id" value="{{ req.id }}">
+                    <button type="submit">Approve</button>
+                </form>
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="deny_request">
+                    <input type="hidden" name="request_id" value="{{ req.id }}">
+                    <button type="submit">Deny</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No pending enrollment requests.</p>
+{% endif %}
+</div>
+{% endblock %}

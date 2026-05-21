@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule{% endblock %}
+
+{% block content %}
+    <h1>My Schedule</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if enrollments %}
+        <div
+            style="
+                max-width: 700px;
+                margin: 30px auto;
+            "
+        >
+            <p>
+                <a href="{% url 'home' %}">&larr; Back to Home</a>
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Time and Day</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in enrollments %}
+                        <tr>
+                            <td>
+                                {{ enrollment.course.name }}
+                            </td>
+                            <td>
+                                {{ enrollment.course.course_schedule }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+            <p>
+                You are currently not enrolled in any Courses!
+            </p>
+    {% endif %}
+{% endblock %}

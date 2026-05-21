@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Course Drop{% endblock %}
+
+{% block content %}
+    <h1>Drop Course</h1>
+<div
+    class="auth-container"
+    style="text-align: center;"
+>    <p>Are you sure you'd liked to drop this course?</p>
+
+    {% if course %}
+        <p><strong>{{ course.course_code }} - {{ course.name }}</strong></p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Drop this course</button>
+    </form>
+
+    <p>
+        <a href="{% url 'enrollments:my_enrollments' %}">No, Back to My Enrollments</a>
+    </p>
+</div>
+{% endblock %}
