@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Instructor Dashboard{% endblock %}
+
+{% block content %}
+<h2>Instructor Dashboard</h2>
+<div
+    class="auth-container"
+    style="text-align: center;"
+>
+<p>Welcome, {{ user.username }}!</p>
+<a href="/courses">Courses</a>
+<br>
+<a href="{% url 'send_notification' %}">Send Notification to Class</a>
+</div>
+{% endblock %}

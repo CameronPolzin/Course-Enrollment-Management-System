@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<h2>Student Dashboard</h2>
+<div
+    class="auth-container"
+    style="text-align: center;"
+>
+<p>Welcome, {{ user.username }}!</p>
+
+<p>
+    <a href="/courses">View Courses</a><br>
+    <a href="{% url 'enrollments:my_enrollments' %}">My Enrollments</a><br>
+    <a href="{% url 'enrollments:my_schedule' %}">My Schedule</a><br>
+    <a href="{% url 'enrollments:waitlist_status' %}">My Waitlist Status</a><br>
+</p>
+</div>
+{% endblock %}

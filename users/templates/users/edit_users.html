@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<h1>Manage Users</h1>
+<p><a href="{% url 'home' %}">&larr; Back to Home</a></p>
+
+<div class="container">
+    {% if users %}
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>New Password</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <form method="post" action="{% url 'update_user' u.id %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <td>
+                        <input type="text" name="username" value="{{ u.username }}" style="width: 120px; margin-right: 0;">
+                    </td>
+                    <td>
+                        <select name="role" style="padding: 6px; border-radius: 5px;">
+                            <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Admin</option>
+                            <option value="instructor" {% if u.role == 'instructor' %}selected{% endif %}>Instructor</option>
+                            <option value="student" {% if u.role == 'student' %}selected{% endif %}>Student</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="password" name="password" placeholder="Leave blank to keep" style="width: 150px; padding: 6px; border-radius: 5px; border: 1px solid #ccc;">
+                    </td>
+                    <td>
+                        <button type="submit" class="edit-user save">Save</button>
+                </form>
+                <form method="post" action="{% url 'delete_user' u.id %}" style="display: inline; margin: 0;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                    {% csrf_token %}
+                        <button type="submit" class="edit-user delete">Delete</button>
+                </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No users found in the system.</p>
+    {% endif %}
+</div>
+{% endblock %}

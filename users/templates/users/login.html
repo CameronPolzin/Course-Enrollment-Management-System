@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <h1 style="font-size: 56px;">
+        Course Enrollment System
+    </h1>
+    <div class="auth-box">
+        <h2 class="blue-heading">
+            Login
+        </h2>
+        <form method="POST">
+            {% csrf_token %}
+            <p>
+                <input type="text" name="username" placeholder="Username" class="full-width-input">
+            </p>
+            <p>
+                <input type="password" name="password" placeholder="Password" class="full-width-input">
+            </p>
+            <button type="submit" class="full-width-button">
+                Login
+            </button>
+        </form>
+        {% if error %}
+        <p class="error-text">
+            {{ error }}
+        </p>
+        {% endif %}
+        <p>
+            Don't have an account?
+            <a href="{% url 'register' %}" class="like-button">
+                Register
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

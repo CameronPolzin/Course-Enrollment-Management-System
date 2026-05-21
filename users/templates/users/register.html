@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User Registration{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+
+    <h1 style="font-size: 56px;">
+        Course Enrollment System
+    </h1>
+
+    <div class="auth-box">
+
+        <h2 class="blue-heading">
+            Register
+        </h2>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <p>
+                {{ form.first_name }}
+            </p>
+
+            <p>
+                {{ form.last_name }}
+            </p>
+
+            <p>
+                {{ form.username }}
+            </p>
+
+            <p>
+                {{ form.password1 }}
+            </p>
+
+            <p>
+                {{ form.password2 }}
+            </p>
+
+            <p>
+                {{ form.role }}
+            </p>
+
+            <button type="submit" class="full-width-button">
+                Register
+            </button>
+
+        </form>
+
+        {% if success %}
+        <p style="color: lightgreen;">
+            {{ success }}
+        </p>
+        {% endif %}
+
+        {% if form.errors %}
+        <p class="error-text">
+            Registration failed. Please check your information.
+        </p>
+        {% endif %}
+
+        <p class="white-link">
+
+            Already have an account?
+
+            <a href="{% url 'login' %}" class="white-link">
+                Login
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+{% endblock %}

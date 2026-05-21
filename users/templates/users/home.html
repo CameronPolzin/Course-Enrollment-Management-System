@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+    {% block title %}Course Enrollment System{% endblock %}
+
+    {% block content %}
+    <!-- Main Home Section -->
+    <body class="home-page">
+        <div style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 80vh;
+                text-align: center;
+            ">
+        <h1 style="
+                    color: rgb(230,237,255);
+                    font-size: 60px;
+                    margin-bottom: 40px;
+                ">
+            Course Enrollment System
+        </h1>
+        <div style="
+                    display: flex;
+                    gap: 20px;
+                ">
+
+            <a href="/register/" class="login-button-style">
+                Register
+            </a>
+            <a href="/login/" class="login-button-style">
+                Login
+            </a>
+
+        </div>
+
+        </div>
+    </body>
+    {% endblock %}
