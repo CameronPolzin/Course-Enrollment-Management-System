@@ -129,3 +129,117 @@ This project was developed using Agile/Scrum practices across multiple sprints. 
 # Disclaimer
 
 This repository is a personal showcase copy of a university group project. The project was originally completed collaboratively as part of a Software Engineering course, and not all the code is mine.
+
+--- 
+
+# How to Run the Project
+
+## 1. Clone the Repository
+
+```bash
+git clone <your-repository-url>
+cd <repository-folder>
+```
+
+
+## 2. Create a Virtual Environment
+
+### Windows
+```bash
+python -m venv venv
+```
+
+### Mac/Linux
+```bash
+python3 -m venv venv
+```
+
+
+## 3. Activate the Virtual Environment
+
+### Windows
+```bash
+venv\Scripts\activate
+```
+
+### Mac/Linux
+```bash
+source venv/bin/activate
+```
+
+
+## 4. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+If a `requirements.txt` file is not included:
+
+```bash
+pip install django
+```
+
+
+## 5. Apply Database Migrations
+
+```bash
+python manage.py migrate
+```
+
+
+## 6. Create a Superuser (Optional)
+
+```bash
+python manage.py createsuperuser
+```
+
+Follow the prompts to create an admin account.
+
+
+## 7. Run the Development Server
+
+```bash
+python manage.py runserver
+```
+
+
+## 8. Open the Application
+
+Open your browser and go to:
+
+```text
+http://127.0.0.1:8000/
+```
+
+Admin panel:
+
+```text
+http://127.0.0.1:8000/admin/
+```
+
+# Running Tests
+
+Run all unit tests:
+
+```bash
+python manage.py test
+```
+
+# Demo Accounts (Optional)
+
+Example accounts used during development:
+
+```text
+Admin:
+Username: admin
+Password: admin
+
+Instructor:
+Username: instructor
+Password: instructor
+
+Student:
+Username: student
+Password: student
+```
