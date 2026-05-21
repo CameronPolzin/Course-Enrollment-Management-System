@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock %}</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+
+<body>
+    <!-- Sticky top banner -->
+    <nav class="site-banner">
+        <div class="banner-brand">
+            <span class="banner-brand-name">Course Enrollment</span>
+        </div>
+        {% if request.user.is_authenticated %}
+        <div class="banner-right">
+            <span class="banner-username">{{ request.user.get_full_name|default:request.user.username }}</span>
+            <a href="{% url 'notifications' %}" class="banner-notif">Notifications
+                <span class="banner-badge">{{request.user.unread_notifications_count }}</span></a>
+            <a href="{% url 'logout' %}" class="banner-logout">Logout</a>
+        </div>
+        {% endif %}
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>

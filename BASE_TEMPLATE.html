@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+<body>
+    <!-- Logout header -->
+    <div style="position: absolute; top: 10px; right: 20px;">
+    {% if request.user.is_authenticated %}
+        <strong>
+            {{ request.user.get_full_name|default:request.user.username }}
+        </strong>
+        |
+        <a href="{% url 'notifications' %}">Notifications ({{ request.user.unread_notifications_count }})</a>
+        |
+        <a href="{% url 'logout' %}">Logout</a>
+    {% endif %}
+    </div>
+
+</body>
+</html>
