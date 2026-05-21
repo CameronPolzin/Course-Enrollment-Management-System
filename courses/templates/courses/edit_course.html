@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Edit Course
+{% endblock %}
+
+{% block content %}
+
+<h1>
+    Edit Course
+</h1>
+
+<div
+    class="auth-container"
+    style="text-align: center;"
+>
+
+    <p>
+
+        <strong>
+            {{ course.course_code }}
+        </strong>
+
+        -
+
+        {{ course.name }}
+
+    </p>
+
+
+    {% if form.errors %}
+
+        <ul
+            style="
+                color: red;
+                text-align: left;
+                display: inline-block;
+            "
+        >
+
+            {% for field in form %}
+
+                {% for error in field.errors %}
+
+                    <li>
+
+                        <strong>
+                            {{ field.label }}:
+                        </strong>
+
+                        {{ error }}
+
+                    </li>
+
+                {% endfor %}
+
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+
+                <li>{{ error }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+    {% endif %}
+
+    <form
+        method="post"
+        style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        "
+    >
+
+        {% csrf_token %}
+
+        {% if form.name %}
+
+            <div
+                class="form-group"
+                style="width: 80%;"
+            >
+
+                <label>
+                    Name:
+                </label>
+
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                    "
+                >
+                    {{ form.name }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if form.course_code %}
+
+            <div
+                class="form-group"
+                style="width: 80%;"
+            >
+
+                <label>
+                    Course Code:
+                </label>
+
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                    "
+                >
+                    {{ form.course_code }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if form.description %}
+
+            <div
+                class="form-group"
+                style="width: 80%;"
+            >
+
+                <label>
+                    Description:
+                </label>
+
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                    "
+                >
+                    {{ form.description }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if form.seating_limit %}
+
+            <div
+                class="form-group"
+                style="width: 80%;"
+            >
+
+                <label>
+                    Seating Limit:
+                </label>
+
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                    "
+                >
+                    {{ form.seating_limit }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if form.start_time %}
+
+            <div
+                class="form-group"
+                style="width: 80%;"
+            >
+
+                <label>
+                    Start Time:
+                </label>
+
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                    "
+                >
+                    {{ form.start_time }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if form.end_time %}
+
+            <div
+                class="form-group"
+                style="width: 80%;"
+            >
+
+                <label>
+                    End Time:
+                </label>
+
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                    "
+                >
+                    {{ form.end_time }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if form.instructor %}
+
+            <div
+                class="form-group"
+                style="width: 80%;"
+            >
+
+                <label>
+                    Instructor:
+                </label>
+
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                    "
+                >
+                    {{ form.instructor }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if form.prerequisites %}
+
+            <div
+                class="form-group"
+                style="width: 80%;"
+            >
+
+                <label>
+                    Prerequisites:
+                </label>
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                    "
+                >
+                    {{ form.prerequisites }}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        <button
+            type="submit"
+            style="margin-top: 10px;"
+        >
+            Save Changes
+        </button>
+
+    </form>
+
+    <p style="margin-top: 20px;">
+
+        <a href="{% url 'course_list' %}">
+            Cancel
+        </a>
+
+    </p>
+
+</div>
+
+{% endblock %}

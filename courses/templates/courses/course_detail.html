@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ course.name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1>
+        {{ course.name }}
+    </h1>
+    <p>
+        <a href="{% url 'course_list' %}">
+            &larr; Back to Courses
+        </a>
+    </p>
+    <table>
+        <tbody>
+            <tr>
+                <th>Course Code</th>
+                <td>{{ course.course_code }}</td>
+            </tr>
+            <tr>
+                <th>Instructor</th>
+                <td>{{ course.instructor }}</td>
+            </tr>
+            <tr>
+                <th>Schedule</th>
+                <td>{{ course.course_schedule }}</td>
+            </tr>
+            <tr>
+                <th>Seats</th>
+                <td>{{ course.seats_display }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ course.description }}</td>
+            </tr>
+            <tr>
+                <th>Prerequisites</th>
+                <td>
+                    {% if course.prerequisites.all %}
+                        {% for prereq in course.prerequisites.all %}
+                            {{ prereq.course_code }}
+                            {% if not forloop.last %}
+                                ,
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

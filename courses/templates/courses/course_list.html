@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block title %}Course List{% endblock %}
+
+{% block content %}
+
+<h1>Courses</h1>
+<div style="max-width: 1500px; margin: 30px auto;">
+
+<p>
+    <a href="{% url 'home' %}">&larr; Back to Home</a>
+</p>
+<!-- Admin create -->
+{% if request.user.role == 'admin' %}
+<a href="{% url 'create_course' %}">+ Create New Course</a>
+{% endif %}
+
+{% if request.user.role == 'admin' %}
+| <a href="{% url 'enrollments:enrollment_history' %}">Enrollment History</a><br><br>
+{% endif %}
+
+<!-- Search Bar -->
+<form method="get" style="margin-bottom: 1em;">
+    <!-- Main search -->
+    <input type="text" name="q" placeholder="Search courses..." value="{{ request.GET.q }}">
+    <button type="submit">
+        Search
+    </button>
+    <!-- Reset filters -->
+    <a href="{% url 'course_list' %}">
+        <button type="button">
+            Reset Filters
+        </button>
+    </a>
+    <br>
+    <!-- Expandable filters -->
+    <details>
+        <summary style="
+                    cursor:pointer;
+                    font-weight:bold;
+                    margin-bottom:10px;
+                " class="like-button">
+            Advanced Filters
+        </summary>
+        <div style="
+                    background:white;
+                    padding:15px;
+                    border-radius:8px;
+                    margin-top:10px;
+                    color:black;
+                ">
+            <!-- Instructor -->
+            <input type="text" name="instructor" placeholder="Instructor name" value="{{ request.GET.instructor }}">
+            <br><br>
+            <!-- Start time -->
+            <label>
+                Start Time:
+            </label>
+            <select name="start_time">
+                <option value="">
+                    Any
+                </option>
+                {% for value, label in time_choices %}
+                <option value="{{ value }}" {% if request.GET.start_time == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <!-- End time -->
+            <label>
+                End Time:
+            </label>
+            <select name="end_time">
+                <option value="">
+                    Any
+                </option>
+                {% for value, label in time_choices %}
+                <option value="{{ value }}" {% if request.GET.end_time == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </select>
+            <br><br>
+
+            <!-- Prerequisite filter -->
+            <label>
+                Requires Prerequisites:
+            </label>
+
+            <select name="has_prereqs">
+
+                <option value="">
+                    Any
+                </option>
+
+                <option
+                    value="yes"
+                    {% if request.GET.has_prereqs == "yes" %}
+                        selected
+                    {% endif %}
+                >
+                    Yes
+                </option>
+
+                <option
+                    value="no"
+                    {% if request.GET.has_prereqs == "no" %}
+                        selected
+                    {% endif %}
+                >
+                    No
+                </option>
+
+            </select>
+
+            <br><br>
+            <!-- Available only -->
+            <label>
+                {% if request.GET.available %}
+                <input type="checkbox" name="available" value="1" checked>
+                {% else %}
+                <input type="checkbox" name="available" value="1">
+                {% endif %}
+                Available Only
+            </label>
+        </div>
+    </details>
+</form>
+
+
+{% if courses %}
+<table border="1" cellpadding="8" style="margin-top: 1em; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Instructor</th>
+            <th>Time</th>
+            <th>Seats</th>
+            <th>Prerequisites</th>
+
+            {% if request.user.role == 'student' %}
+            <th>Enroll</th>
+            {% endif %}
+
+            {% if request.user.role == 'admin' or request.user.role == 'instructor' %}
+            <th>Students</th>
+            <th>Edit</th>
+            <th>Manage Enrollment</th>
+            {% endif %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for course in courses %}
+        <tr>
+            <td>{{ course.course_code }}</td>
+            <td>
+                <a href="{% url 'course_detail' course.id %}">
+                    {{ course.name }}
+                </a>
+            </td>
+
+            <td>
+                {% if course.instructor %}
+                {{ course.instructor.get_full_name|default:course.instructor.username }}
+
+                {% else %}
+                TBA
+                {% endif %}
+            </td>
+            <td>{{ course.course_schedule }}</td>
+            <td>
+                {{ course.seats_display }}
+                {% if course.is_full %}
+                <span style="color: red; font-weight: bold;">(FULL)</span>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if course.prerequisites.all %}
+                {% for prereq in course.prerequisites.all %}
+                {{ prereq.course_code }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                {% else %}
+                None
+                {% endif %}
+            </td>
+
+            <!-- Enrollment column -->
+            {% if request.user.role == 'student' %}
+            <td>
+                {% if course.id in enrolled_course_ids %}
+
+                <!-- Student already enrolled -->
+                Already Enrolled
+
+                {% elif course.id in requested_course_ids %}
+
+                <!-- Student already submitted a request -->
+                <span style="color: orange; font-weight: bold;">
+                    Enrollment Request Submitted
+                </span>
+
+                {% elif course.id in denied_course_ids %}
+
+                <span style="color: red; font-weight: bold;">
+                    Denied
+                </span>
+
+                {% elif course.id in waitlisted_course_ids %}
+
+                <span style="color: rgb(24, 24, 129); font-weight: bold;">
+                    Waitlisted
+                </span>
+
+                {% elif course.is_full or course.id in courses_missing_prereqs %}
+
+                <!-- Show request button if course is full or missing prereqs -->
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    {% if course.id in courses_missing_prereqs %}
+                    <span style="color: red; font-size: 0.8em;">Missing Prerequisites</span>
+                    {% endif %}
+
+                    <a href="{% url 'enrollments:submit_enrollment_request' course.id %}">
+                        <button type="button">
+                            Submit Enrollment Request
+                        </button>
+                    </a>
+
+                    {% if course.is_full and course.id not in courses_missing_prereqs %}
+                    <form method="post" action="{% url 'enrollments:join_waitlist' course.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Join Waitlist</button>
+                    </form>
+                    {% endif %}
+                </div>
+
+                {% else %}
+
+                <!-- Normal enrollment button -->
+                <form method="post" action="{% url 'enrollments:enroll_course' course.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Enroll</button>
+                </form>
+
+                {% endif %}
+            </td>
+            {% endif %}
+            <!-- Students and Edit columns -->
+            {% if request.user.role == 'admin' or request.user.role == 'instructor' %}
+            <td>
+                {% if request.user.role == 'admin' or course.instructor == request.user %}
+                <details>
+                    <summary class="like-button">View Students</summary>
+                    {% if course.enrollments.all %}
+                    <ul>
+                        {% for enrollment in course.enrollments.all %}
+                        <li>{{ enrollment.student.get_full_name|default:enrollment.student.username }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No students enrolled.</p>
+                    {% endif %}
+                </details>
+                {% endif %}
+            </td>
+            <td>
+                {% if request.user.role == 'admin' or course.instructor == request.user %}
+                <a href="{% url 'edit_course' course.id %}">Edit</a>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if request.user.role == 'admin' or course.instructor == request.user %}
+                <a href="{% url 'enrollments:manage_enrollment' course.id %}">Manage</a>
+                {% endif %}
+            </td>
+
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p>No Courses Found.</p>
+{% endif %}
+{% endblock %}
+</div>
